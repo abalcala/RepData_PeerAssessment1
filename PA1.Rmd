@@ -25,14 +25,17 @@ act<-na.omit(act0)
 
 
 ## What is mean total number of steps taken per day?
-Get sum of steps of each data
+Get sum of steps of each data.
 ```{r}
 stepssum<-aggregate(steps~date,data=act,sum)
 hist(stepssum$steps)
+```
+Create a dataframe with the mean and median steps
+```{r}
 steps1mean<-aggregate(steps~date,data=act,mean)
 steps1median<-aggregate(steps~date,data=act,median)
 df1<-data.frame(mean=steps1mean,median=steps1median)
-df
+df1
 ```
 
 ## What is the average daily activity pattern?
@@ -59,7 +62,8 @@ Create list of row index that has NA steps in act0 and get no. of NA
 act0na<-which(is.na(act0$steps)==TRUE)
 length(act0na)
 ```
-If row index in ordered is in list previously created, replace steps in df act0 with the value of steps in df stepsinterval. Create histogram of the sum of steps.
+If row index in ordered is in list previously created, replace steps in df act0 with the value of steps in df stepsinterval. This will replace NA steps with the mean steps for that interval.
+Create histogram of the sum of steps.
 ```{r}
 for (i in 1:nrow(ordered))
 {
@@ -67,10 +71,12 @@ for (i in 1:nrow(ordered))
 }
 ordered$day<-ifelse(wday(ordered$date) %in% c(2:6),"weekday","weekend")
 steps3sum<-aggregate(steps.x~date,data=ordered,sum)
+hist(steps3sum$steps)
+```
+Create dataframe with mean and median steps. Compared to the first dataframe "df1", NA days now use the mean and median of the data set: mean=37.38 and median=34.11.
+```{r}
 steps3mean<-aggregate(steps.x~date,data=ordered,mean)
 steps3median<-aggregate(steps.x~date,data=ordered,median)
-
-hist(steps3sum$steps)
 df3<-data.frame(mean=steps3mean,median=steps3median)
 df3
 ```
